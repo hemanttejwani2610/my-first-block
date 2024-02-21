@@ -1,0 +1,60 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "my-block/my-first-block",
+	"version": "0.1.0",
+	"title": "My First Block",
+	"category": "widgets",
+	"icon": "smiley",
+	"description": "Display props for WordPress and Gutenberg",
+	"attributes": {
+		"title": {
+			"type": "string",
+			"default": "My First Block"
+		},
+		"username": {
+			"type": "string",
+			"default": "admin"
+		},
+		"count": {
+			"type": "number",
+			"default": 4
+		}
+	},
+	"example": {},
+	"supports": {
+		"html": false,
+		"align": true,
+		"color": {
+			"gradients": true,
+			"background": true,
+			"text": true
+		},
+		"__experimentalBorder": {
+			"radius": true,
+			"color": true,
+			"width": true,
+			"style": true
+		},
+		"spacing": {
+			"padding": true,
+			"margin": true
+		},
+		"typography": {
+			"fontSize": true,
+			"lineHeight": true,
+			"__experimentalFontFamily": true,
+			"__experimentalFontWeight": true,
+			"__experimentalFontStyle": true,
+			"__experimentalLetterSpacing": true,
+			"__experimentalTextTransform": true,
+			"__experimentalTextDecoration": true
+		}
+	},
+	"textdomain": "my-first-block",
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css",
+	"render": "file:./render.php",
+	"viewScript": "file:./view.js"
+}
