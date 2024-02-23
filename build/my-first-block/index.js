@@ -2,6 +2,21 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
+/***/ "./src/my-first-block/constants.js":
+/*!*****************************************!*\
+  !*** ./src/my-first-block/constants.js ***!
+  \*****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   STORAGEKEY: () => (/* binding */ STORAGEKEY)
+/* harmony export */ });
+const STORAGEKEY = 'gutenberg_commits'; // This is the key we are going to use to store the data in the session storage
+//APIURL = 'https://api.github.com/repos/WordPress/Gutenberg/commits?author='; // This is the URL of the API we are going to use to fetch the data
+
+/***/ }),
+
 /***/ "./src/my-first-block/edit.js":
 /*!************************************!*\
   !*** ./src/my-first-block/edit.js ***!
@@ -27,6 +42,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_core_data__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @wordpress/core-data */ "@wordpress/core-data");
 /* harmony import */ var _wordpress_core_data__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_wordpress_core_data__WEBPACK_IMPORTED_MODULE_6__);
 /* harmony import */ var _editor_scss__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./editor.scss */ "./src/my-first-block/editor.scss");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./constants */ "./src/my-first-block/constants.js");
 
 /**
  * Retrieves the translation of text.
@@ -71,7 +87,6 @@ function Edit({
   },
   setAttributes
 }) {
-  console.log((0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.useBlockProps)());
   const classes = 'my-first-block';
   const url = `https://api.github.com/repos/WordPress/Gutenberg/commits?author=${username}&per_page=${count}`;
   const authorURL = `https://github.com/WordPress/gutenberg/commits?author=${username}`;
@@ -83,14 +98,10 @@ function Edit({
   const [props, setProps] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_4__.useState)();
   const [propsToDisplay, setPropsToDisplay] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_4__.useState)();
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_4__.useEffect)(() => {
-    const storageKey = `${username}_${count}`;
-    console.log(storageKey);
+    const storageKey = `${_constants__WEBPACK_IMPORTED_MODULE_8__.STORAGEKEY}_${username}_${count}`;
     if (window.sessionStorage.getItem(storageKey)) {
       setProps(JSON.parse(window.sessionStorage.getItem(storageKey)));
-      console.log('from storage');
     } else {
-      window.sessionStorage.setItem(storageKey, 'This is a test');
-      console.log('from fetch');
       fetch(`https://api.github.com/repos/WordPress/Gutenberg/commits?author=${username}&per_page=${count}`).then(response => response.json()).then(data => {
         setProps(data);
         window.sessionStorage.setItem(storageKey, JSON.stringify(data));
@@ -119,24 +130,19 @@ function Edit({
     onChange: newUsername => setAttributes({
       username: newUsername
     })
-  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.RichText, {
-    tagName: "p",
-    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('My Range Control', 'my-first-block'),
-    value: count,
-    onChange: newCount => setAttributes({
-      count: newCount
-    })
   }), propsToDisplay ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("ul", null, propsToDisplay.map(({
     sha,
     commit: {
       message
-    }
+    },
+    html_url
   }) => {
+    let commit_message = message.match(/#[0-9]*/);
     return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("li", {
       key: sha
     }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-      href: "#"
-    }, "[#", message, "]"));
+      href: html_url
+    }, "[", commit_message[0], "]"));
   })) : (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, "Loading..."), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
     href: authorURL
   }, "View all Props"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.InspectorControls, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.PanelBody, {

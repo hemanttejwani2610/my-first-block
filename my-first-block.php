@@ -56,7 +56,7 @@ function block_text_render($attributes, $content, $block_instance){
 					preg_match('/(#[0-9]*)/', $message, $matches);
 					?>
 					<li>
-						<a href="<?php echo esc_url( $url ); ?>"><?php echo esc_html( $matches[0] ); ?></a>
+						<a href="<?php echo esc_url( $url ); ?>">[<?php echo esc_html( $matches[0] ); ?>]</a>
 					</li>
 			<?php endforeach; ?>
 			<?php else: ?>

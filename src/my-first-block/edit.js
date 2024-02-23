@@ -25,7 +25,7 @@ import { store as coreDataStore } from '@wordpress/core-data';
  * @see https://www.npmjs.com/package/@wordpress/scripts#using-css
  */
 import './editor.scss';
-
+import { STORAGEKEY } from './constants';
 /**
  * The edit function describes the structure of your block in the context of the
  * editor. This represents what the editor will render when the block is used.
@@ -35,7 +35,6 @@ import './editor.scss';
  * @return {Element} Element to render.
  */
 export default function Edit({ attributes: { title, username, count }, setAttributes }) {
-	console.log(useBlockProps());
 	const classes = 'my-first-block';
 	const url = `https://api.github.com/repos/WordPress/Gutenberg/commits?author=${username}&per_page=${count}`;
 	const authorURL = `https://github.com/WordPress/gutenberg/commits?author=${username}`;
@@ -49,14 +48,10 @@ export default function Edit({ attributes: { title, username, count }, setAttrib
 	const [propsToDisplay, setPropsToDisplay] = useState();
 
 	useEffect(() => {
-		const storageKey = `${username}_${count}`;
-		console.log(storageKey)
+		const storageKey = `${STORAGEKEY}_${username}_${count}`;
 		if(window.sessionStorage.getItem(storageKey)) {
 			setProps(JSON.parse(window.sessionStorage.getItem(storageKey)));
-			console.log('from storage');
 		} else {
-			window.sessionStorage.setItem(storageKey, 'This is a test');
-			console.log('from fetch');
 			fetch(`https://api.github.com/repos/WordPress/Gutenberg/commits?author=${username}&per_page=${count}`).
 				then((response) => response.json()).
 				then((data) => {
@@ -88,24 +83,20 @@ export default function Edit({ attributes: { title, username, count }, setAttrib
 				value={username}
 				onChange={(newUsername) => setAttributes({ username: newUsername })}
 			/>
-			<RichText
-				tagName="p"
-				label={__('My Range Control', 'my-first-block')}
-				value={count}
-				onChange={(newCount) => setAttributes({ count: newCount })}
-			/>
+			
 			{propsToDisplay ? (
 				<ul>
-					{propsToDisplay.map(({ sha, commit: { message } }) => {
+					{propsToDisplay.map(({ sha, commit: { message }, html_url }) => {
+						let commit_message = message.match(/#[0-9]*/);
 						return (
 							<li key={sha}>
-								<a href="#">[#{message}]</a>
+								<a href={ html_url }>[{commit_message[0]}]</a>
 							</li>
 						);
 					})}
 				</ul>
 			) : (
-					<p>Loading...</p>
+				<p>Loading...</p>
 			)}
 			<a href={authorURL}>
 				View all Props
