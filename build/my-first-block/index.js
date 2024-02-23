@@ -10,10 +10,13 @@
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   COMMIT_COUNT_MAX: () => (/* binding */ COMMIT_COUNT_MAX),
+/* harmony export */   COMMIT_COUNT_MIN: () => (/* binding */ COMMIT_COUNT_MIN),
 /* harmony export */   STORAGEKEY: () => (/* binding */ STORAGEKEY)
 /* harmony export */ });
-const STORAGEKEY = 'gutenberg_commits'; // This is the key we are going to use to store the data in the session storage
-//APIURL = 'https://api.github.com/repos/WordPress/Gutenberg/commits?author='; // This is the URL of the API we are going to use to fetch the data
+const STORAGEKEY = 'gutenberg_commits';
+const COMMIT_COUNT_MIN = 3;
+const COMMIT_COUNT_MAX = 15;
 
 /***/ }),
 
@@ -88,7 +91,7 @@ function Edit({
   setAttributes
 }) {
   const classes = 'my-first-block';
-  const url = `https://api.github.com/repos/WordPress/Gutenberg/commits?author=${username}&per_page=${count}`;
+  const url = `https://api.github.com/repos/WordPress/Gutenberg/commits?author=${username}&per_page=${_constants__WEBPACK_IMPORTED_MODULE_8__.COMMIT_COUNT_MAX}`;
   const authorURL = `https://github.com/WordPress/gutenberg/commits?author=${username}`;
   /* const posts = useSelect((select) => 
   	select(coreDataStore).getEntityRecords('postType', 'post', { per_page: 20 }),
@@ -102,6 +105,7 @@ function Edit({
     if (window.sessionStorage.getItem(storageKey)) {
       setProps(JSON.parse(window.sessionStorage.getItem(storageKey)));
     } else {
+      if (!username) return;
       fetch(`https://api.github.com/repos/WordPress/Gutenberg/commits?author=${username}&per_page=${count}`).then(response => response.json()).then(data => {
         setProps(data);
         window.sessionStorage.setItem(storageKey, JSON.stringify(data));
@@ -117,7 +121,7 @@ function Edit({
     ...(0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.useBlockProps)(),
     className: classes
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.RichText, {
-    tagName: "H2",
+    tagName: "h2",
     value: title,
     onChange: newTitle => setAttributes({
       title: newTitle
@@ -141,7 +145,8 @@ function Edit({
     return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("li", {
       key: sha
     }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-      href: html_url
+      href: html_url,
+      rel: "noopener noreferrer"
     }, "[", commit_message[0], "]"));
   })) : (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, "Loading..."), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
     href: authorURL
@@ -165,8 +170,8 @@ function Edit({
     onChange: newCount => setAttributes({
       count: newCount
     }),
-    min: 0,
-    max: 100
+    min: _constants__WEBPACK_IMPORTED_MODULE_8__.COMMIT_COUNT_MIN,
+    max: _constants__WEBPACK_IMPORTED_MODULE_8__.COMMIT_COUNT_MAX
   }))));
 }
 

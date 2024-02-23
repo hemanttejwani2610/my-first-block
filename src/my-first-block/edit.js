@@ -25,7 +25,7 @@ import { store as coreDataStore } from '@wordpress/core-data';
  * @see https://www.npmjs.com/package/@wordpress/scripts#using-css
  */
 import './editor.scss';
-import { STORAGEKEY } from './constants';
+import { STORAGEKEY, COMMIT_COUNT_MIN, COMMIT_COUNT_MAX } from './constants';
 /**
  * The edit function describes the structure of your block in the context of the
  * editor. This represents what the editor will render when the block is used.
@@ -36,7 +36,7 @@ import { STORAGEKEY } from './constants';
  */
 export default function Edit({ attributes: { title, username, count }, setAttributes }) {
 	const classes = 'my-first-block';
-	const url = `https://api.github.com/repos/WordPress/Gutenberg/commits?author=${username}&per_page=${count}`;
+	const url = `https://api.github.com/repos/WordPress/Gutenberg/commits?author=${username}&per_page=${COMMIT_COUNT_MAX}`;
 	const authorURL = `https://github.com/WordPress/gutenberg/commits?author=${username}`;
 	/* const posts = useSelect((select) => 
 		select(coreDataStore).getEntityRecords('postType', 'post', { per_page: 20 }),
@@ -52,6 +52,7 @@ export default function Edit({ attributes: { title, username, count }, setAttrib
 		if(window.sessionStorage.getItem(storageKey)) {
 			setProps(JSON.parse(window.sessionStorage.getItem(storageKey)));
 		} else {
+			if(!username) return;
 			fetch(`https://api.github.com/repos/WordPress/Gutenberg/commits?author=${username}&per_page=${count}`).
 				then((response) => response.json()).
 				then((data) => {
@@ -72,7 +73,7 @@ export default function Edit({ attributes: { title, username, count }, setAttrib
 	return (
 		<section { ...useBlockProps() } className = { classes } >
 			<RichText
-				tagName="H2"
+				tagName="h2"
 				value={title}
 				onChange={(newTitle) => setAttributes({ title: newTitle })}
 				allowedFormats={['core/bold', 'core/italic', 'core/link']}
@@ -90,7 +91,9 @@ export default function Edit({ attributes: { title, username, count }, setAttrib
 						let commit_message = message.match(/#[0-9]*/);
 						return (
 							<li key={sha}>
-								<a href={ html_url }>[{commit_message[0]}]</a>
+								<a href={html_url} target="_blank" rel="noopener noreferrer">
+									[{commit_message[0]}]
+								</a>
 							</li>
 						);
 					})}
@@ -98,7 +101,7 @@ export default function Edit({ attributes: { title, username, count }, setAttrib
 			) : (
 				<p>Loading...</p>
 			)}
-			<a href={authorURL}>
+			<a href={authorURL} target="_blank" rel="noopener noreferrer">
 				View all Props
 			</a>
 			<InspectorControls>
@@ -117,8 +120,8 @@ export default function Edit({ attributes: { title, username, count }, setAttrib
 						label={__('My Range Control', 'my-first-block')}
 						value={count}
 						onChange={(newCount) => setAttributes({ count: newCount })}
-						min={0}	
-						max={100}
+						min={COMMIT_COUNT_MIN}	
+						max={COMMIT_COUNT_MAX}
 					/>
 				</PanelBody>
 			</InspectorControls>

@@ -34,12 +34,34 @@ function my_first_block_my_first_block_block_init() {
 add_action( 'init', 'my_first_block_my_first_block_block_init' );
 
 function block_text_render($attributes, $content, $block_instance){
-	$url = 'https://api.github.com/repos/WordPress/Gutenberg/commits?author=' . $attributes['username'];
-	$gb_response = wp_remote_get($url);
-	if( is_wp_error($gb_response) ){
-		return 'Error: ' . $gb_response->get_error_message();
+
+	$username = isset( $attributes['username'] ) ? $attributes['username'] : false;
+	$count = isset( $attributes['count'] ) ? $attributes['count'] : false;
+
+	if( ! $username ){
+		return;
 	}
-	$gb_data = wp_remote_retrieve_body($gb_response);
+
+	$cache_key = 'gutenberg_commits_' . $username . '_' . $count;
+	$gb_data = get_transient($cache_key);
+
+	if( false == $gb_data ){
+		$url = add_query_arg( array(
+			'author' => $username,
+			'per_page' => $count
+		), 'https://api.github.com/repos/WordPress/gutenberg/commits' );
+	
+
+		$gb_response = wp_remote_get($url);
+		if( is_wp_error($gb_response) ){
+			return 'Error: ' . $gb_response->get_error_message();
+		}else{
+			$gb_data = wp_remote_retrieve_body($gb_response);
+		}
+
+		set_transient($cache_key, $gb_data, 12 * HOUR_IN_SECONDS);
+	}
+	
 	$gb_data = json_decode($gb_data);
 	ob_start();
 	?>
@@ -56,14 +78,23 @@ function block_text_render($attributes, $content, $block_instance){
 					preg_match('/(#[0-9]*)/', $message, $matches);
 					?>
 					<li>
-						<a href="<?php echo esc_url( $url ); ?>">[<?php echo esc_html( $matches[0] ); ?>]</a>
+						<a href="<?php echo esc_url( $url ); ?>" target="_blank" rel="noopener noreferrer">
+							[<?php echo esc_html( $matches[0] ); ?>]
+						</a>
 					</li>
 			<?php endforeach; ?>
 			<?php else: ?>
 				<li>No commits found</li>
 			<?php endif; ?>
 		</ul>
-		<a href="https://github.com/WordPress/gutenberg/commits?author=<?php echo esc_html( $attributes['username'] ); ?>">
+		<?php
+		$all_commits_url = add_query_arg( array(
+			'author' => esc_attr( $username ),
+		), 
+		'https://github.com/WordPress/gutenberg/commits'
+		);
+		?>
+		<a href="<?php echo $all_commits_url; ?>" target="_blank" rel="noopener noreferrer">
 			View all Props
 		</a>
 	</section>
