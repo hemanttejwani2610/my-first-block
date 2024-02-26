@@ -121,19 +121,21 @@ function Edit({
     ...(0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.useBlockProps)(),
     className: classes
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.RichText, {
-    tagName: "h2",
+    tagName: "h3",
     value: title,
     onChange: newTitle => setAttributes({
       title: newTitle
     }),
-    allowedFormats: ['core/bold', 'core/italic', 'core/link']
+    allowedFormats: ['core/bold', 'core/italic', 'core/link'],
+    placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Enter a title', 'my-first-block')
   }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.RichText, {
     tagName: "p",
     label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Username', 'my-first-block'),
     value: username,
     onChange: newUsername => setAttributes({
       username: newUsername
-    })
+    }),
+    placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Enter a username', 'my-first-block')
   }), propsToDisplay ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("ul", null, propsToDisplay.map(({
     sha,
     commit: {
@@ -146,10 +148,13 @@ function Edit({
       key: sha
     }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
       href: html_url,
+      target: "_blank",
       rel: "noopener noreferrer"
     }, "[", commit_message[0], "]"));
   })) : (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, "Loading..."), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-    href: authorURL
+    href: authorURL,
+    target: "_blank",
+    rel: "noopener noreferrer"
   }, "View all Props"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.InspectorControls, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.PanelBody, {
     title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('My Panel', 'my-first-block')
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.TextControl, {

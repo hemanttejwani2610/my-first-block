@@ -66,7 +66,7 @@ function block_text_render($attributes, $content, $block_instance){
 	ob_start();
 	?>
 	<section <?php echo get_block_wrapper_attributes(); ?>>
-		<h2><?php echo esc_html( $attributes['title'] ); ?></h2>
+		<h3><?php echo esc_html( $attributes['title'] ); ?></h3>
 		<p><?php echo "Contributor: " . esc_html( $attributes['username'] ); ?></p>
 		<ul>
 			<?php 

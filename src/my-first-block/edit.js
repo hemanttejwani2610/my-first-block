@@ -73,16 +73,18 @@ export default function Edit({ attributes: { title, username, count }, setAttrib
 	return (
 		<section { ...useBlockProps() } className = { classes } >
 			<RichText
-				tagName="h2"
+				tagName="h3"
 				value={title}
 				onChange={(newTitle) => setAttributes({ title: newTitle })}
 				allowedFormats={['core/bold', 'core/italic', 'core/link']}
+				placeholder={__('Enter a title', 'my-first-block')}
 			/>
 			<RichText
 				tagName="p"
 				label={__('Username', 'my-first-block')}
 				value={username}
 				onChange={(newUsername) => setAttributes({ username: newUsername })}
+				placeholder={__('Enter a username', 'my-first-block')}
 			/>
 			
 			{propsToDisplay ? (
