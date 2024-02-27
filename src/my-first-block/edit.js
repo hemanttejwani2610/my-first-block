@@ -107,9 +107,9 @@ export default function Edit({ attributes: { title, username, count }, setAttrib
 				View all Props
 			</a>
 			<InspectorControls>
-				<PanelBody title={__('My Panel', 'my-first-block')}>
+				<PanelBody title={__('Settings', 'my-first-block')}>
 					<TextControl
-						label={__('My Text Control', 'my-first-block')}
+						label={__('Title', 'my-first-block')}
 						value={title}
 						onChange={(newTitle) => setAttributes({ title: newTitle })}
 					/>
@@ -119,7 +119,7 @@ export default function Edit({ attributes: { title, username, count }, setAttrib
 						onChange={(newUsername) => setAttributes({ username: newUsername })}
 					/>
 					<RangeControl 
-						label={__('My Range Control', 'my-first-block')}
+						label={__('Props', 'my-first-block')}
 						value={count}
 						onChange={(newCount) => setAttributes({ count: newCount })}
 						min={COMMIT_COUNT_MIN}	
